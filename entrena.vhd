@@ -11,11 +11,13 @@ END ENTITY entrena;
 
 ARCHITECTURE neurona OF entrena is
 signal I_signal: std_logic_vector(2 downto 0); 
-
+signal w1: 	integer:=0; --pesos iniciales
+signal w2:	integer:=0;
 BEGIN
+
 	PROCESS(a,b,s,inst)
 		VARIABLE x1,x2,y: integer range -1 to 1;
-		VARIABLE w1,w2: 	integer:=0; --pesos iniciales
+--		VARIABLE w1,w2: 	integer:=0; --pesos iniciales
 		VARIABLE I: 		integer;
 		VARIABLE respuesta: integer range -1 to 1;
 		VARIABLE beta: 	integer range -1 to 1;
@@ -30,7 +32,7 @@ BEGIN
 		
 		 I := w1*x1+w2*x2; --Ecuación general 
 		 
-		 I_signal <= std_logic_vector(to_signed(I,I_signal'length)); --Monitorea el resultado de I, convertido de entero a vector
+		 I_signal <= std_logic_vector(to_signed(I,I_signal'length)); --Señal con el resultado de I, convertido de entero a vector
 		 
 		 IF I>= theta THEN --Calcula la respuesta del perceptron
 				respuesta:=1;
@@ -63,13 +65,13 @@ BEGIN
 --				END IF;	
 --		 END IF;
 
-		W1	:=	w1+(respuesta*beta*x1); -- Se ajusta el vector de ponderaciones 
-		w2	:=	w2+(respuesta*beta*x2);
+		W1	<=	w1+(respuesta*beta*x1); -- Se ajusta el vector de ponderaciones 
+		w2	<=	w2+(respuesta*beta*x2);
 
 	--if (tope<=3) then
-		I_res 	<= I_signal;
-		weight1	<= std_logic_vector(to_signed(w1,2)); --Monitorea los pesos, convertidos de Entero a std_logic_vector 
-		weight2	<= std_logic_vector(to_signed(w2,2));
+		I_res 	<= I_signal;	--monitorea el resultado de I
+		weight1	<= std_logic_vector(to_unsigned(w1,2)); --Monitorea los pesos, convertidos de Entero a std_logic_vector 
+		weight2	<= std_logic_vector(to_unsigned(w2,2));
 		
 	--end if;
 	END PROCESS;
